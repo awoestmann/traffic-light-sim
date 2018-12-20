@@ -4,13 +4,14 @@ import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.graph.Network;
 
-public class AutoAgent{
+public class AutoAgent extends AmpelnetzComponent{
 	
 	public enum auto_state {DRIVING, HALTING};
+
 	
 	// Jetztiger Zustand
 	auto_state state;
-	// Zukünftiger Zustand
+	// Zukï¿½nftiger Zustand
 	auto_state _state;
 	
 	
@@ -19,13 +20,14 @@ public class AutoAgent{
 		return state;
 	}
 	
-	private ContinuousSpace<AutoAgent> space;
+	private ContinuousSpace<AmpelnetzComponent> space;
 	
-	public AutoAgent(auto_state o_state, ContinuousSpace<AutoAgent> o_space)
+	public AutoAgent(auto_state o_state, ContinuousSpace<AmpelnetzComponent> o_space)
 	{
 		space = o_space;
 		state = o_state;
 		_state = o_state;
+		componentType = AmpelnetzComponent.ComponentType.AUTO;
 	}
 	
 	@ScheduledMethod(start= 1.0, interval= 1.0)
@@ -39,7 +41,7 @@ public class AutoAgent{
 	}
 	
 	/**
-	 * Schreibt nur auf den zukünftigen Zustand!
+	 * Schreibt nur auf den zukï¿½nftigen Zustand!
 	 * 
 	 * @param _state
 	 */

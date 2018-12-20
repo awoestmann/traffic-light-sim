@@ -12,9 +12,9 @@ import repast.simphony.random.RandomHelper;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.SimpleCartesianAdder;
 
-public class NetzBuilder implements ContextBuilder<AutoAgent>{
+public class NetzBuilder implements ContextBuilder<AmpelnetzComponent>{
 
-	public Context<AutoAgent> build(Context<AutoAgent> context) {
+	public Context<AmpelnetzComponent> build(Context<AmpelnetzComponent> context) {
 		
 		//Parameter, die vor der Simulation im GUI geaendert werden koennen.
 		Parameters p = (Parameters) RunEnvironment.getInstance().getParameters();
@@ -28,7 +28,7 @@ public class NetzBuilder implements ContextBuilder<AutoAgent>{
 		double density = (Double) ((repast.simphony.parameter.Parameters) p).getValue("density");
 		// Wie schnell sind die Autos?
 		double speed = (Double) ((repast.simphony.parameter.Parameters) p).getValue("speed");
-		// Wie wahrscheinlich eine neue Straße erstellt wird beim generieren des Netzwerkes
+		// Wie wahrscheinlich eine neue Straï¿½e erstellt wird beim generieren des Netzwerkes
 		//double branching = (Double)  ((repast.simphony.parameter.Parameters) p).getValue("branching");
 		//String netzwerktyp = (String)  ((repast.simphony.parameter.Parameters) p).getValue("netzwerktyp");
 		
@@ -36,17 +36,18 @@ public class NetzBuilder implements ContextBuilder<AutoAgent>{
 		//erstellt das Grid namens "Forest". Grid mit "sticky borders" (an Raendern wie eine Wand). 
 		//Keine Doppelbesetzung der Gridzellen moeglich.
 		
-		ContinuousSpace<AutoAgent> spaceBuilder = ContinuousSpaceFactoryFinder.createContinuousSpaceFactory(null).createContinuousSpace(
-				"ampelnetzwerk_id", context, new SimpleCartesianAdder<AutoAgent>(),
+		ContinuousSpace<AmpelnetzComponent> spaceBuilder = ContinuousSpaceFactoryFinder.createContinuousSpaceFactory(null)
+				.createContinuousSpace(
+						"ampelnetzwerk_id", context, new SimpleCartesianAdder<AmpelnetzComponent>(),
 				new repast.simphony.space.continuous.StrictBorders(),
 				width, height);
 		
-		//Erstelle Straßennetz
+		//Erstelle Straï¿½ennetz
 		final int MIN_GAP = 2;
 		int _min_gap = MIN_GAP;
 		for (int i = 0; i < width; i++){
 			for (int j = 0; j < height; j++){
-				// Überspringe Nicht Randplätze
+				// ï¿½berspringe Nicht Randplï¿½tze
 				if((i > 0 && i < width) || (j > 0 && j < height))
 					continue;
 				
@@ -74,6 +75,7 @@ public class NetzBuilder implements ContextBuilder<AutoAgent>{
 					int new_direction = prev_direction;
 					
 					NetzTile prev_tile = tile;
+					context.add(tile);
 					
 					while(!found_end)
 					{
@@ -98,13 +100,13 @@ public class NetzBuilder implements ContextBuilder<AutoAgent>{
 				//falls density groesser als Zufallszahl zwischen 0 und 1, dann Waldelement, sonst nicht brennbar.
 				AutoAgent auto;
 				if (density > RandomHelper.nextDoubleFromTo(0.0, 1.0)){
-					auto = new AutoAgent(auto_state.HALTING, spaceBuilder);
+					//auto = new AutoAgent(auto_state.HALTING, spaceBuilder);
 					
 				}	else {
-					auto = new AutoAgent(auto_state.DRIVING, spaceBuilder);
+					//auto = new AutoAgent(auto_state.DRIVING, spaceBuilder);
 				}
-				context.add(auto);
-				spaceBuilder.moveTo(auto, i, j);
+				//context.add(auto);
+				//spaceBuilder.moveTo(auto, i, j);
 			}
 		}
 		
