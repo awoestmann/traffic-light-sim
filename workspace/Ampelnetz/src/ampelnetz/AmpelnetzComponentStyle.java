@@ -7,8 +7,10 @@ import saf.v3d.scene.VSpatial;
 
 public class AmpelnetzComponentStyle extends DefaultStyleOGL2D {
 	
-	public Color getColor(AmpelnetzComponent agent)
+	@Override
+	public Color getColor(Object obj)
 	{
+		AmpelnetzComponent agent = (AmpelnetzComponent) obj;
 		switch (agent.getComponentType()) {
 			case AMPEL: 
 				break;
@@ -17,9 +19,8 @@ public class AmpelnetzComponentStyle extends DefaultStyleOGL2D {
 				return getAutoColor(auto);
 			case TILE: 
 				NetzTile tile = (NetzTile) agent;
-				break;
+				return getTileColor(tile);
 		}
-		AutoAgent element = (AutoAgent) agent;
 		
 		return Color.pink;
 		/*
@@ -51,8 +52,9 @@ public class AmpelnetzComponentStyle extends DefaultStyleOGL2D {
 	private Color getTileColor(NetzTile tile) {
 		switch (tile.getTileType()) {
 			case STREET:
-			case ENDPOINT:
 				return Color.black;
+			case ENDPOINT:
+				return Color.red;
 			case BLOCK:
 				return Color.gray;
 			default:

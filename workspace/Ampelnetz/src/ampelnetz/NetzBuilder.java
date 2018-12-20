@@ -47,51 +47,16 @@ public class NetzBuilder implements ContextBuilder<AmpelnetzComponent>{
 		int _min_gap = MIN_GAP;
 		for (int i = 0; i < width; i++){
 			for (int j = 0; j < height; j++){
-				// �berspringe Nicht Randpl�tze
-				if((i > 0 && i < width) || (j > 0 && j < height))
-					continue;
-				
-				if(_min_gap > 0)
-				{
-					_min_gap--;
-				}else
-				{
-					_min_gap = MIN_GAP;
-					NetzTile tile = new NetzTile(tile_type.ENDPOINT, spaceBuilder);
-					
-					boolean found_end = false;
-					
-					// 0 = Oben , 1 = Rechts, 2 = Unten, 3 = Links
-					int prev_direction = 0;
-					if(i == 0)
-						prev_direction = 3;
-					else if(i == width-1)
-						prev_direction = 1;
-					else if(j == 0)
-						prev_direction = 0;
-					else
-						prev_direction = 2;
-					
-					int new_direction = prev_direction;
-					
-					NetzTile prev_tile = tile;
+				NetzTile tile;
+				if (i != 25) {
+					tile = new NetzTile(NetzTile.tile_type.BLOCK, spaceBuilder);
 					context.add(tile);
-					
-					while(!found_end)
-					{
-						while(new_direction == prev_direction)
-							new_direction = RandomHelper.nextIntFromTo(0, 3);
-						switch(new_direction)
-						{
-							case 0:
-							{
-								//if(spaceBuilder.getObjectAt(spaceBuilder.getLocation(prev_tile).getX(), spaceBuilder.getLocation(prev_tile).getY() + 1).get_state() == tile_type.STREET)
-								break;
-							}
-						}
-						found_end = true;
-					}
+				} else {
+					tile = new NetzTile(NetzTile.tile_type.STREET, spaceBuilder);
+					context.add(tile);
 				}
+				spaceBuilder.moveTo(tile, i,j);
+				
 			}
 		}
 		
