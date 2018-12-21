@@ -1,6 +1,7 @@
 package ampelnetz;
 
 
+import ampelnetz.AutoAgent.auto_direction;
 import ampelnetz.AutoAgent.auto_state;
 import ampelnetz.NetzTile.tile_type;
 import repast.simphony.context.Context;
@@ -48,32 +49,42 @@ public class NetzBuilder implements ContextBuilder<AmpelnetzComponent>{
 		for (int i = 0; i < width; i++){
 			for (int j = 0; j < height; j++){
 				NetzTile tile;
-				if (i != 25) {
-					tile = new NetzTile(NetzTile.tile_type.BLOCK, spaceBuilder);
+				if (i == 25 || j == 25) {
+					tile = new NetzTile(NetzTile.tile_type.STREET, spaceBuilder);
 					context.add(tile);
 				} else {
-					tile = new NetzTile(NetzTile.tile_type.STREET, spaceBuilder);
+					tile = new NetzTile(NetzTile.tile_type.BLOCK, spaceBuilder);
 					context.add(tile);
 				}
 				spaceBuilder.moveTo(tile, i,j);
 				
 			}
 		}
+		NetzTile t1 = new NetzTile(NetzTile.tile_type.ENDPOINT, spaceBuilder);
+		context.add(t1);
+		spaceBuilder.moveTo(t1, 25,0);
 		
+		AutoAgent auto = new AutoAgent(auto_state.DRIVING, spaceBuilder, auto_direction.UP); 
+		context.add(auto);
+		spaceBuilder.moveTo(auto, 25, 0);
+					
+		
+		/*
 		for (int i = 0; i < width; i++){
 			for (int j = 0; j < height; j++){
 				//falls density groesser als Zufallszahl zwischen 0 und 1, dann Waldelement, sonst nicht brennbar.
 				AutoAgent auto;
 				if (density > RandomHelper.nextDoubleFromTo(0.0, 1.0)){
-					//auto = new AutoAgent(auto_state.HALTING, spaceBuilder);
+					auto = new AutoAgent(auto_state.HALTING, spaceBuilder);
 					
 				}	else {
-					//auto = new AutoAgent(auto_state.DRIVING, spaceBuilder);
+					auto = new AutoAgent(auto_state.DRIVING, spaceBuilder);
 				}
-				//context.add(auto);
-				//spaceBuilder.moveTo(auto, i, j);
+				
+				context.add(auto);
+				spaceBuilder.moveTo(auto, i, j);
 			}
-		}
+		}*/
 		
 		return context;
 	}

@@ -54,7 +54,7 @@ public class AmpelnetzComponentStyle extends DefaultStyleOGL2D {
 			case STREET:
 				return Color.black;
 			case ENDPOINT:
-				return Color.red;
+				return Color.white;
 			case BLOCK:
 				return Color.gray;
 			default:
