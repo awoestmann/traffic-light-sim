@@ -1,5 +1,7 @@
 package ampelnetz;
 
+import java.util.Iterator;
+
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
@@ -39,25 +41,54 @@ public class AutoAgent extends AmpelnetzComponent{
 	
 	@ScheduledMethod(start= 1.0, interval= 1.0)
 	public void step(){
+		
 		NdPoint currentPos = space.getLocation(this);
 		double x = currentPos.getX();
 		double y = currentPos.getY();
+		double _x = x;
+		double _y = y;
 		
 		switch (direction) {
 		case UP: 
-			y += 1;
+			_y += 1;
 			break;
 		case DOWN:
-			y-= 1;
+			_y-= 1;
 			break;
 		case LEFT:
-			x -= 1;
+			_x -= 1;
 			break;
 		case RIGHT:
-			x += 1;
+			_x += 1;
 			break;
 		}
-		space.moveTo(this, x, y);
+		
+		Iterable<AmpelnetzComponent> obj_in_front = space.getObjectsAt(_x,_y);
+		
+		for(AmpelnetzComponent ac : obj_in_front)
+		{
+		
+			switch(ac.componentType)
+			{
+			case AMPEL:
+				// Frag Ampel ob man durch kann
+				break;
+			case AUTO:
+				if(((AutoAgent) ac).get_state() == auto_state.HALTING)
+				{
+					set_state(auto_state.HALTING);
+					_x = x;
+					_y = y;
+				}else
+				{
+					set_state(auto_state.DRIVING);
+				}
+				break;
+			case TILE:
+				break;
+			}
+		}
+		space.moveTo(this, _x, _y);
 		
 	}
 	
