@@ -3,13 +3,11 @@ package streetnetwork;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
+import streetnetwork.Constants.Direction;
+import streetnetwork.Constants.TrafficLightDirection;
 
 public class Car extends NetworkComponent{
-	
 	public enum CarState {DRIVING, HALTING};
-	public enum Direction {UP, DOWN, LEFT, RIGHT};
-
-	
 	/**
 	 * Current state
 	 */
@@ -25,7 +23,10 @@ public class Car extends NetworkComponent{
 	 */
 	Direction direction;
 	
-	
+	/**
+	 * The space this agent is currently in
+	 */
+	private ContinuousSpace<NetworkComponent> space;
 	
 	
 	public CarState get_state()
@@ -33,17 +34,44 @@ public class Car extends NetworkComponent{
 		return state;
 	}
 	
-	private ContinuousSpace<NetworkComponent> space;
-	
 	public Car(CarState o_state, ContinuousSpace<NetworkComponent> o_space, Direction direction)
 	{
 		space = o_space;
 		state = o_state;
 		_state = o_state;
 		this.direction = direction;
-		componentType = NetworkComponent.ComponentType.AUTO;
+		componentType = NetworkComponent.ComponentType.CAR;
+	}
+
+	/**
+	 * Checks if car is allowed to pass a crossing with open direction dir.
+	 * @param dir The open direction of the crossing
+	 * @return True if allowed to pass
+	 */
+	private boolean allowedToPass(TrafficLightDirection dir) {
+		if (dir == TrafficLightDirection.VERTICAL) {
+			return this.direction == Direction.UP || this.direction == Direction.DOWN;
+		} else {
+			return this.direction == Direction.LEFT || this.direction == Direction.RIGHT;
+		}
 	}
 	
+	private Iterable<NetworkComponent> getObjectsInFront() {
+		NdPoint currentPos = space.getLocation(this);
+		double x = currentPos.getX();
+		double y = currentPos.getY();
+		switch (this.direction) {
+		case UP: y+=1;
+		case DOWN: y -= 1;
+		case LEFT: x -= 1;
+		case RIGHT: x += 1;
+		}
+		return space.getObjectsAt(x, y);
+	}
+	
+	/**
+	 * Step method
+	 */
 	@ScheduledMethod(start= 1.0, interval= 1.0)
 	public void step(){
 		
@@ -53,47 +81,51 @@ public class Car extends NetworkComponent{
 		double _x = x;
 		double _y = y;
 		
-		switch (direction) {
-		case UP: 
-			_y += 1;
-			break;
-		case DOWN:
-			_y-= 1;
-			break;
-		case LEFT:
-			_x -= 1;
-			break;
-		case RIGHT:
-			_x += 1;
-			break;
-		}
-		
-		Iterable<NetworkComponent> obj_in_front = space.getObjectsAt(_x,_y);
-		
+		Iterable<NetworkComponent> obj_in_front = getObjectsInFront();
+		boolean allowedToMove = true;
 		for(NetworkComponent ac : obj_in_front)
 		{
 		
-			switch(ac.componentType)
+			switch(ac.getComponentType())
 			{
-			case AMPEL:
-				// Frag Ampel ob man durch kann
-				break;
-			case AUTO:
-				if(((Car) ac).get_state() == CarState.HALTING)
-				{
-					set_state(CarState.HALTING);
-					_x = x;
-					_y = y;
-				}else
-				{
-					set_state(CarState.DRIVING);
+			case CAR:
+				if(((Car) ac).get_state() == CarState.HALTING) {
+					allowedToMove = false;
 				}
 				break;
+			case CROSSING:
+				Crossing crossing = (Crossing) ac;
+				if (!allowedToPass(crossing.getOpenDirection())) {
+					allowedToMove = false;
+				}
+				break;
+			case TRAFFIC_LIGHT:
 			case TILE:
 				break;
 			}
 		}
-		space.moveTo(this, _x, _y);
+		if (allowedToMove == true) {
+			set_state(CarState.DRIVING);
+			switch (direction) {
+				case UP: 
+					_y += 1;
+					break;
+				case DOWN:
+					_y-= 1;
+					break;
+				case LEFT:
+					_x -= 1;
+					break;
+				case RIGHT:
+					_x += 1;
+					break;
+			}
+			if (_x < Constants.SPACE_WIDTH && _y < Constants.SPACE_HEIGHT) {
+				space.moveTo(this, _x, _y);
+			}	
+		} else {
+			set_state(CarState.HALTING);
+		}
 		
 	}
 	
@@ -103,7 +135,7 @@ public class Car extends NetworkComponent{
 	}
 	
 	/**
-	 * Schreibt nur auf den zuk�nftigen Zustand!
+	 * Set the future state
 	 * 
 	 * @param _state
 	 */

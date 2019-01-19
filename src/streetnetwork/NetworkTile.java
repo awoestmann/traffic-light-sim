@@ -5,7 +5,7 @@ import streetnetwork.NetworkComponent.ComponentType;
 
 public class NetworkTile extends NetworkComponent{
 
-	public enum tile_type {STREET, ENDPOINT, BLOCK};
+	public enum tile_type {STREET, ENDPOINT, BLOCK, CROSSING};
 
 	private tile_type tile_type;
 	private ContinuousSpace<NetworkComponent> space;

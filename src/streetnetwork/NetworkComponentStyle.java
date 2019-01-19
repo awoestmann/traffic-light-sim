@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import repast.simphony.visualizationOGL2D.DefaultStyleOGL2D;
 import saf.v3d.scene.VSpatial;
+import streetnetwork.NetworkComponent.ComponentType;
 
 public class NetworkComponentStyle extends DefaultStyleOGL2D {
 	
@@ -12,35 +13,25 @@ public class NetworkComponentStyle extends DefaultStyleOGL2D {
 	{
 		NetworkComponent agent = (NetworkComponent) obj;
 		switch (agent.getComponentType()) {
-			case AMPEL: 
-				break;
-			case AUTO: 
+			case TRAFFIC_LIGHT:
+				TrafficLight light = (TrafficLight) agent;
+				return getTrafficLightColor(light);
+			case CAR: 
 				Car auto = (Car) agent;
 				return getCarColor(auto);
 			case TILE: 
 				NetworkTile tile = (NetworkTile) agent;
 				return getTileColor(tile);
+			case CROSSING:
+				return Color.blue;
+			default: return Color.pink;
 		}
-		
-		return Color.pink;
-		/*
-		switch (element.getState()){
-		
-		case Element.notFlammable:
-			return Color.WHITE;		//nicht brennbares Element weiss.
-		case Element.tree:
-			return Color.GREEN;		//Baum ist gruen.
-		case Element.fire:
-			return Color.RED;		//Feuer ist rot.
-		
-		default:*/
-		
 	}
 
 	private Color getCarColor(Car agent) {
 		switch (agent.get_state()) {
 			case DRIVING: 
-				return Color.green;
+				return Color.white;
 			case HALTING:
 				return Color.red;
 			default:
@@ -61,13 +52,25 @@ public class NetworkComponentStyle extends DefaultStyleOGL2D {
 				return Color.pink;
 		}
 	}
+
+	private Color getTrafficLightColor(TrafficLight light) {
+		return light.isOpen() ? Color.green: Color.red;
+	}
 	
 	@Override
 	public VSpatial getVSpatial(Object agent, VSpatial spatial) {
 		
-	    //muss nur 1* aufgerufen werden, wenn noch keine Form festgelegt ist.
+		ComponentType type = ((NetworkComponent) agent).getComponentType();
+		
 		if (spatial == null) {
-	      spatial = shapeFactory.createRectangle(15, 15);	//Rechteck mit Groesse
+			switch (type) {
+			case TRAFFIC_LIGHT:
+				spatial = shapeFactory.createCircle(7.5f, 8, true);
+				break;
+			case CAR:
+			default:
+				spatial = shapeFactory.createRectangle(15, 15);
+			}	      
 	    }
 	    return spatial;
 	}

@@ -6,7 +6,7 @@ package streetnetwork;
  */
 public abstract class NetworkComponent {
 
-	public static enum ComponentType {AMPEL, AUTO, TILE};
+	public static enum ComponentType {TRAFFIC_LIGHT, CAR, TILE, CROSSING};
 	
 	ComponentType componentType;
 	

@@ -1,25 +1,27 @@
 package streetnetwork;
 
-public class TrafficLight extends NetworkComponent{
+import streetnetwork.Constants.Direction;
 
-	public enum ampel_direction {HORIZONTAL, VERTICAL, INVERSE};
+public class TrafficLight extends NetworkComponent{
 	
-	ampel_direction dir;
-	ampel_direction _dir;
+	private boolean open = false;
+	public Direction direction; 
 	
-	public void set_Schaltung(ampel_direction o_dir)
-	{
-		if(o_dir == ampel_direction.INVERSE)
-		{
-			if(dir == ampel_direction.HORIZONTAL)
-				_dir = ampel_direction.VERTICAL;
-			else
-				_dir = ampel_direction.HORIZONTAL;
-		}else
-			_dir = o_dir;
+	public TrafficLight(boolean open, Direction direction) {
+		this.open = open;
+		this.direction = direction;
+		componentType = ComponentType.TRAFFIC_LIGHT;
 	}
 	
-	public TrafficLight() {
-		componentType = ComponentType.AMPEL;
+	public Direction getDirection() {
+		return this.direction;
+	}
+
+	public boolean isOpen() {
+		return open;
+	}
+
+	public void setOpen(boolean open) {
+		this.open = open;
 	}
 }
