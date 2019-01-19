@@ -61,16 +61,16 @@ public class Car extends NetworkComponent{
 		double x = currentPos.getX();
 		double y = currentPos.getY();
 		switch (this.direction) {
-		case UP: y+=1;
-		case DOWN: y -= 1;
-		case LEFT: x -= 1;
-		case RIGHT: x += 1;
+		case UP: y+=1; break;
+		case DOWN: y -= 1; break;
+		case LEFT: x -= 1; break;
+		case RIGHT: x += 1; break;
 		}
 		return space.getObjectsAt(x, y);
 	}
 	
 	/**
-	 * Step method
+	 * Move the car forward if the way is not blocked
 	 */
 	@ScheduledMethod(start= 1.0, interval= 1.0)
 	public void step(){
@@ -122,7 +122,9 @@ public class Car extends NetworkComponent{
 			}
 			if (_x < Constants.SPACE_WIDTH && _y < Constants.SPACE_HEIGHT) {
 				space.moveTo(this, _x, _y);
-			}	
+			} else {
+				NetworkBuilder.removeComponent(this);
+			}
 		} else {
 			set_state(CarState.HALTING);
 		}

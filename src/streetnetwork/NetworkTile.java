@@ -1,20 +1,14 @@
 package streetnetwork;
 
-import repast.simphony.space.continuous.ContinuousSpace;
-import streetnetwork.NetworkComponent.ComponentType;
-
 public class NetworkTile extends NetworkComponent{
 
 	public enum tile_type {STREET, ENDPOINT, BLOCK, CROSSING};
 
-	private tile_type tile_type;
-	private ContinuousSpace<NetworkComponent> space;
-	
-	public NetworkTile(tile_type o_type, ContinuousSpace<NetworkComponent> o_space)
+	private tile_type tile_type;	
+	public NetworkTile(tile_type o_type)
 	{
-		space = o_space;
-		tile_type = o_type;
 		componentType = ComponentType.TILE;
+		this.tile_type = o_type;
 	}
 
 	public tile_type getTileType() {

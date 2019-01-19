@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.LinkedList;
 
 import repast.simphony.engine.schedule.ScheduledMethod;
-import repast.simphony.space.continuous.ContinuousSpace;
 import streetnetwork.Constants.Direction;
 import streetnetwork.Constants.TrafficLightDirection;
-import streetnetwork.NetworkTile.tile_type;
 
 public class Crossing extends NetworkComponent {
 	
@@ -31,9 +29,6 @@ public class Crossing extends NetworkComponent {
 	 * Ticks since the traffic lights have been switched the last time
 	 */
 	private long ticksSinceLastSwitch = 0;
-
-	private tile_type tile_type;
-	private ContinuousSpace<NetworkComponent> space;
 	
 
 	/**
@@ -44,12 +39,9 @@ public class Crossing extends NetworkComponent {
 	 * @param possibleDirections
 	 * @param direction
 	 */
-	public Crossing(tile_type o_type, ContinuousSpace<NetworkComponent> o_space,
-			Direction[] possibleDirections, TrafficLightDirection direction) {
+	public Crossing(Direction[] possibleDirections, TrafficLightDirection direction) {
 		
 		this.componentType = ComponentType.CROSSING;
-		space = o_space;
-		tile_type = o_type;
 		this.possibleDirections = possibleDirections;
 		this.direction = direction;
 		

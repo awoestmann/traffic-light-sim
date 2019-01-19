@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <parameters>
 
-	<parameter name="randomSeed" displayName="Default Random Seed" type="int" defaultValue="__NULL__" /><parameter
-		name="SWITCH_TIME" displayName="Traffic Light Switch Time"
-		defaultValue="1000" type="int">
-</parameter>
-
+	<parameter name="randomSeed" displayName="Default Random Seed" type="int" defaultValue="__NULL__" />
+	<parameter name="SWITCH_TIME" displayName="Traffic Light Switch Time" defaultValue="1000" type="int"/>
+	<parameter name="MAX_SPEED" displayName="Maximum Speed" defaultValue="1.0" type="float" />
+	<parameter name="ACCELERATION" displayName="Acceleration" defaultValue="1.1" type="float" />		
 </parameters>
