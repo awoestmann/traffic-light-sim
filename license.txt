@@ -1,0 +1,1 @@
+The traffic-light-sim model is licensed as provided for by the authors. Please contact them for details.
