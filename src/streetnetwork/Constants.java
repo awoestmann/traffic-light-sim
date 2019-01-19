@@ -9,13 +9,19 @@ public final class Constants {
 	public final static int SPACE_HEIGHT = 50;
 	public final static int SPACE_WIDTH = 50;
 	private static int SWITCH_TIME = 5;
+	private static float SPEED = 0.01f;
+	public static final float CAR_UPDATE_INTERVAL = 100;
 	
 	public static void readParams() {
 		Parameters p = (Parameters) RunEnvironment.getInstance().getParameters();
 		SWITCH_TIME = (int)((repast.simphony.parameter.Parameters) p).getValue("SWITCH_TIME");
-		
+		SPEED = (float) p.getValue("MAX_SPEED");
 		//double density = (Double) ((repast.simphony.parameter.Parameters) p).getValue("density");
 		//double speed = (Double) ((repast.simphony.parameter.Parameters) p).getValue("speed");
+	}
+	
+	public static float getSpeed() {
+		return SPEED;
 	}
 	
 	public static int getSwitchTime() {

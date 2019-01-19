@@ -23,6 +23,8 @@ public class Car extends NetworkComponent{
 	 */
 	Direction direction;
 	
+	private final float speed = Constants.getSpeed();
+	
 	/**
 	 * The space this agent is currently in
 	 */
@@ -72,7 +74,7 @@ public class Car extends NetworkComponent{
 	/**
 	 * Move the car forward if the way is not blocked
 	 */
-	@ScheduledMethod(start= 1.0, interval= 1.0)
+	@ScheduledMethod(start= 1.0, interval= Constants.CAR_UPDATE_INTERVAL)
 	public void step(){
 		
 		NdPoint currentPos = space.getLocation(this);
@@ -108,16 +110,16 @@ public class Car extends NetworkComponent{
 			set_state(CarState.DRIVING);
 			switch (direction) {
 				case UP: 
-					_y += 1;
+					_y += speed;
 					break;
 				case DOWN:
-					_y-= 1;
+					_y-= speed;
 					break;
 				case LEFT:
-					_x -= 1;
+					_x -= speed;
 					break;
 				case RIGHT:
-					_x += 1;
+					_x += speed;
 					break;
 			}
 			if (_x < Constants.SPACE_WIDTH && _y < Constants.SPACE_HEIGHT) {
@@ -131,7 +133,7 @@ public class Car extends NetworkComponent{
 		
 	}
 	
-	@ScheduledMethod(start = 1.5, interval = 1.0)
+	@ScheduledMethod(start = 1.5, interval = Constants.CAR_UPDATE_INTERVAL)
 	public void update(){
 		this.state = this._state;
 	}
