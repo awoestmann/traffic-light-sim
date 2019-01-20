@@ -24,6 +24,10 @@ public class NetworkBuilder implements ContextBuilder<NetworkComponent>{
 	 */
 	private static ContinuousSpace<NetworkComponent> simSpace;
 	
+	public static void moveComponentTo(NetworkComponent comp, NdPoint pos) {
+		moveComponentTo(comp, pos.getX(), pos.getY());
+	}
+	
 	public static void moveComponentTo(NetworkComponent comp, double x, double y) {
 		simSpace.moveTo(comp, x, y);
 	}
@@ -92,11 +96,15 @@ public class NetworkBuilder implements ContextBuilder<NetworkComponent>{
 	 */
 	public Context<NetworkComponent> build(Context<NetworkComponent> context) {
 		Constants.readParams();
-		simSpace = ContinuousSpaceFactoryFinder.createContinuousSpaceFactory(null)
+		simSpace = ContinuousSpaceFactoryFinder
+				.createContinuousSpaceFactory(null)
 				.createContinuousSpace(
-						"streetnetwork_projection_id", context, new SimpleCartesianAdder<NetworkComponent>(),
-				new repast.simphony.space.continuous.StrictBorders(),
-				Constants.SPACE_WIDTH, Constants.SPACE_HEIGHT);
+						"streetnetwork_projection_id",
+						context,
+						new SimpleCartesianAdder<NetworkComponent>(),
+						new repast.simphony.space.continuous.StrictBorders(),
+						Constants.SPACE_WIDTH,
+						Constants.SPACE_HEIGHT);
 		simContext = context;
 
 		for (int i = 0; i < Constants.SPACE_WIDTH; i++){

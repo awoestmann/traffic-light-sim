@@ -44,11 +44,6 @@ public final class Constants {
 	private static int SWITCH_TIME = 5;
 	
 	/**
-	 * Speed of all cars in tiles per tick 
-	 */
-	private static float SPEED = 1.0f;
-	
-	/**
 	 * True if simulation params have been read
 	 */
 	private static boolean initialized = false;
@@ -61,17 +56,13 @@ public final class Constants {
 			initialized = true;
 			Parameters p = (Parameters) RunEnvironment.getInstance().getParameters();
 			SWITCH_TIME = (int)((repast.simphony.parameter.Parameters) p).getValue("SWITCH_TIME");
-			SPEED = (float) p.getValue("MAX_SPEED");
 		}		
-	}
-	
-	public static float getSpeed() {
-		readParams();
-		return SPEED;
 	}
 	
 	public static int getSwitchTime() {
 		readParams();
 		return SWITCH_TIME;
 	}
+	
+	private Constants() {}
 }

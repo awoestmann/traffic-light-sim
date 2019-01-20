@@ -7,6 +7,13 @@ import repast.simphony.space.continuous.NdPoint;
 import streetnetwork.Constants.Direction;
 import streetnetwork.Constants.TrafficLightDirection;
 
+/**
+ * Class modeling a car.
+ * The agent can switch between driving, halting and turn.
+ * If it recognizes an obsticle like another car or a red traffic light it stops
+ * until the path is clear again. If it reaches a crossroad it calculates the
+ * next direction based on the probabilities, given by the crossroad.
+ */
 public class Car extends NetworkComponent{
 
 	public enum CarState {DRIVING, HALTING, TURNING};
@@ -30,11 +37,6 @@ public class Car extends NetworkComponent{
 	 * Next direction if encountering a crossroad
 	 */
 	private Direction nextDirection;
-	
-	/**
-	 * Speed in tiles per update
-	 */
-	private final float speed = Constants.getSpeed();
 	
 	public CarState get_state()
 	{
@@ -76,6 +78,24 @@ public class Car extends NetworkComponent{
 		double x = currentPos.getX();
 		double y = currentPos.getY();
 		switch (this.direction) {
+			case UP: y+=1; break;
+			case DOWN: y -= 1; break;
+			case LEFT: x -= 1; break;
+			case RIGHT: x += 1; break;
+		}
+		return NetworkBuilder.getObjectsAt(x, y);
+	}
+	
+	/**
+	 * Returns a list of objects in front of the given coordinates in the given direction
+	 * @param x X Coordinate
+	 * @param y Y Coordinate
+	 * @param dir Direction
+	 * @return List of objects
+	 */
+	private Iterable<NetworkComponent> getObjectsInFrontOfCoordinates(
+			double x, double y, Direction dir) {
+		switch (direction) {
 			case UP: y+=1; break;
 			case DOWN: y -= 1; break;
 			case LEFT: x -= 1; break;
@@ -148,11 +168,19 @@ public class Car extends NetworkComponent{
 			float currentValue = lastValue + probs.get(possibleDirections[i]) + probAddition;
 			if (random >= lastValue && random < currentValue) {
 				this.nextDirection = possibleDirections[i];
-				System.out.println(this.nextDirection);
 				return;
 			}
 			lastValue = currentValue;
 		}
+	}
+	
+	/**
+	 * Check if this car would be out of bounds with the given coordinates
+	 * @param pos Position to check
+	 * @return True if not out of bounds
+	 */
+	private boolean isNotOutOfBounds(NdPoint pos) {
+		return isNotOutOfBounds(pos.getX(), pos.getY());
 	}
 	
 	/**
@@ -172,16 +200,36 @@ public class Car extends NetworkComponent{
 	}
 	
 	/**
+	 * Checks if the prepared turn is possible.
+	 * @return True if no car is blocking the next street, else false
+	 */
+	private boolean isTurningPossible() {
+		//Get coordinates after turn;
+		NdPoint pos = NetworkBuilder.getCoordinatesOf(this);
+		pos = Utils.moveCoordinatesInDirection(pos, this.direction);
+		double x = pos.getX();
+		double y = pos.getY();		
+		
+		Iterable<NetworkComponent> objectsInFront = getObjectsInFrontOfCoordinates(x, y,
+				this.nextDirection);
+		for (NetworkComponent cmp: objectsInFront) {
+			if (cmp.getComponentType() == ComponentType.CAR) {
+				Car car = (Car) cmp;
+				if (car.getDirection() == this.nextDirection) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	/**
 	 * Move the car forward if the way is not blocked
 	 */
 	@ScheduledMethod(start= 1.0, interval= Constants.CAR_UPDATE_INTERVAL)
 	public void step(){
 		
 		NdPoint currentPos = NetworkBuilder.getCoordinatesOf(this);
-		double x = currentPos.getX();
-		double y = currentPos.getY();
-		double _x = x;
-		double _y = y;
 		
 		Iterable<NetworkComponent> obj_in_front = getObjectsInFront();
 		boolean allowedToMove = true;
@@ -204,28 +252,21 @@ public class Car extends NetworkComponent{
 				default: break;
 			}
 		}
+		
+		//If turning is prepared, check if space is clear
+		if (this.nextDirection != null && !isTurningPossible()) {
+			allowedToMove = false;
+		}
+
 		if (allowedToMove == true) {
 			set_state(CarState.DRIVING);
 			if (this.nextDirection != null) {
 				this.direction = this.nextDirection;
 				this.nextDirection = null;
 			}
-			switch (direction) {
-				case UP: 
-					_y += speed;
-					break;
-				case DOWN:
-					_y-= speed;
-					break;
-				case LEFT:
-					_x -= speed;
-					break;
-				case RIGHT:
-					_x += speed;
-					break;
-			}
-			if (isNotOutOfBounds(_x, _y)) {
-				NetworkBuilder.moveComponentTo(this, _x, _y);
+			NdPoint newPos = Utils.moveCoordinatesInDirection(currentPos, this.direction);
+			if (isNotOutOfBounds(newPos)) {
+				NetworkBuilder.moveComponentTo(this, newPos);
 				if (crossroadToTurn != null) {
 					pickNextDirection(crossroadToTurn);
 				}
@@ -237,6 +278,9 @@ public class Car extends NetworkComponent{
 		}		
 	}
 	
+	/**
+	 * Updates the state to the future state
+	 */
 	@ScheduledMethod(start = 1.5, interval = Constants.CAR_UPDATE_INTERVAL)
 	public void update(){
 		this.state = this._state;

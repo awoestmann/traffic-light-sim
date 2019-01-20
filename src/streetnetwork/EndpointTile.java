@@ -20,6 +20,10 @@ public class EndpointTile extends NetworkTile {
 		this.position = NetworkBuilder.getCoordinatesOf(this);
 	}
 	
+	/**
+	 * Constructor.
+	 * @param carDirection Driving direction of spawned cars
+	 */
 	public EndpointTile(Direction carDirection) {
 		this();
 		this.carDirection = carDirection;
@@ -45,6 +49,9 @@ public class EndpointTile extends NetworkTile {
 		return blocked;
 	}
 	
+	/**
+	 * Spawns a new car
+	 */
 	@ScheduledMethod(start= 1.0, interval= Constants.SPAWN_RATE)
 	public void spawn() {
 		this.position = NetworkBuilder.getCoordinatesOf(this);
