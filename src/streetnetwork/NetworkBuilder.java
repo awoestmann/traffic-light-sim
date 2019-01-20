@@ -7,10 +7,8 @@ import repast.simphony.dataLoader.ContextBuilder;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.continuous.SimpleCartesianAdder;
-import streetnetwork.Car.CarState;
 import streetnetwork.Constants.Direction;
 import streetnetwork.Constants.TrafficLightDirection;
-import streetnetwork.NetworkTile.tile_type;
 
 /**
  * Data loader class

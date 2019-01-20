@@ -97,8 +97,12 @@ public class Crossroad extends NetworkTile {
 		return this.horizontalLights;
 	}
 	
-	public HashMap<Direction, Float> getTurningProbabilites() {
+	public HashMap<Direction, Float> getTurningProbabilities() {
 		return this.turningProbabilities;
+	}
+	
+	public Direction[] getPossibleDirections() {
+		return this.possibleDirections;
 	}
 	
 	/**

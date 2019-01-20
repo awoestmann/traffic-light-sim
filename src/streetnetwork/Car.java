@@ -1,7 +1,8 @@
 package streetnetwork;
 
+import java.util.HashMap;
+import java.util.Random;
 import repast.simphony.engine.schedule.ScheduledMethod;
-import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
 import streetnetwork.Constants.Direction;
 import streetnetwork.Constants.TrafficLightDirection;
@@ -9,6 +10,7 @@ import streetnetwork.Constants.TrafficLightDirection;
 public class Car extends NetworkComponent{
 
 	public enum CarState {DRIVING, HALTING, TURNING};
+
 	/**
 	 * Current state
 	 */
@@ -83,20 +85,83 @@ public class Car extends NetworkComponent{
 	}
 	
 	/**
+	 * Removes the direction oposite to the current driving direction from the
+	 * input array and returns it.
+	 * @param possibleCrossroadDirections Possible directions of the crossroad ahead.
+	 * @return The directions without the opposite driving direction
+	 */
+	private Direction[] getPossibleTurningDirections(Direction[] possibleCrossroadDirections) {
+		int directionCount = possibleCrossroadDirections.length;
+		Direction[] possibleTurningDirections = new Direction[directionCount - 1];
+		int turningDirectionIndex = 0;
+
+		for (int i = 0; i < possibleCrossroadDirections.length; i ++) {
+			Direction dir = possibleCrossroadDirections[i];
+			switch (this.direction) {
+			case UP: 
+				if (dir != Direction.DOWN) {
+					possibleTurningDirections[turningDirectionIndex++] = dir;
+				}
+				break;
+			case DOWN:
+				if (dir != Direction.UP) {
+					possibleTurningDirections[turningDirectionIndex++] = dir;
+				}
+				break;
+			case LEFT:
+				if (dir != Direction.RIGHT) {
+					possibleTurningDirections[turningDirectionIndex++] = dir;
+				}
+				break;
+			case RIGHT:
+				if (dir != Direction.LEFT) {
+					possibleTurningDirections[turningDirectionIndex++] = dir;
+				}
+				break;
+			}
+		}
+		return possibleTurningDirections;
+	}
+	
+	/**
 	 * Picks the next direction at a crossroad and prepares the car for a turn.
 	 * @param crossroad Crossroad to turn at
 	 */
 	private void pickNextDirection(Crossroad crossroad) {
-		this.nextDirection = Direction.LEFT;
+		//Pick a random float between 0 and 1
+		Random r = new Random();
+		float random = r.nextFloat();
+		
+		//Get possible turning directions and probabilities
+		Direction[] possibleDirections = getPossibleTurningDirections(
+				crossroad.getPossibleDirections());
+		HashMap<Direction, Float> probs = crossroad.getTurningProbabilities();
+		
+		//As the current direction had to be removed from the possible directions,
+		//add its probability to all other probabilities
+		float removedProb = probs.get(this.direction);
+		float probAddition = removedProb / (float) possibleDirections.length;
+
+		//Pick the direction matching the random number
+		float lastValue = 0.0f;
+		for (int i = 0; i < possibleDirections.length; i++) {
+			float currentValue = lastValue + probs.get(possibleDirections[i]) + probAddition;
+			if (random >= lastValue && random < currentValue) {
+				this.nextDirection = possibleDirections[i];
+				System.out.println(this.nextDirection);
+				return;
+			}
+			lastValue = currentValue;
+		}
 	}
 	
 	/**
 	 * Check if this car would be out of bounds with the given coordinates
 	 * @param x X Coordinate
 	 * @param y y Coordinate
-	 * @return True if out of bounds
+	 * @return True if not out of bounds
 	 */
-	private boolean isOutOfBounds(double x, double y) {
+	private boolean isNotOutOfBounds(double x, double y) {
 		switch (this.direction) {
 			case UP: return y < Constants.SPACE_HEIGHT - 1;
 			case DOWN: return y > 1;
@@ -159,7 +224,7 @@ public class Car extends NetworkComponent{
 					_x += speed;
 					break;
 			}
-			if (isOutOfBounds(_x, _y)) {
+			if (isNotOutOfBounds(_x, _y)) {
 				NetworkBuilder.moveComponentTo(this, _x, _y);
 				if (crossroadToTurn != null) {
 					pickNextDirection(crossroadToTurn);
