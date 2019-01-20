@@ -29,7 +29,7 @@ public class NetworkComponentStyle extends DefaultStyleOGL2D {
 	}
 
 	private Color getCarColor(Car agent) {
-		switch (agent.get_state()) {
+		switch (agent.getState()) {
 			case DRIVING: 
 				return Color.white;
 			case HALTING:

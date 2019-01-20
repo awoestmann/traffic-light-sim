@@ -36,11 +36,11 @@ public class ThrougputMeasurePoint {
 	@ScheduledMethod(start = 1.5, interval = Constants.CAR_UPDATE_INTERVAL)
 	public void update() {
 		this.intervalsCounted++;
-		Iterable<NetworkComponent> objects = NetworkBuilder.getObjectsAt(this.coordinates);
+		Iterable<NetworkComponent> objects = Utils.getObjectsAt(this.coordinates);
 		for (NetworkComponent cmp: objects) {
 			if (cmp.getComponentType() == ComponentType.CAR) {
 				Car car = (Car) cmp;
-				if (car.get_state() == CarState.DRIVING) {
+				if (car.getState() == CarState.DRIVING) {
 					carsCounted++;
 				}
 			}

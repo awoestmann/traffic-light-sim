@@ -17,7 +17,7 @@ public class EndpointTile extends NetworkTile {
 	public EndpointTile() {
 		super();
 		this.tile_type = tile_type.ENDPOINT;
-		this.position = NetworkBuilder.getCoordinatesOf(this);
+		this.position = Utils.getCoordinatesOf(this);
 	}
 	
 	/**
@@ -36,8 +36,8 @@ public class EndpointTile extends NetworkTile {
 	 * @return True if tile is blocked
 	 */
 	private boolean isTileBlocked() {
-		this.position = NetworkBuilder.getCoordinatesOf(this);
-		Iterable<NetworkComponent> objects = NetworkBuilder.getObjectsAt(position);
+		this.position = Utils.getCoordinatesOf(this);
+		Iterable<NetworkComponent> objects = Utils.getObjectsAt(position);
 		boolean blocked = false;
 		for (NetworkComponent comp: objects) {
 			if (comp.getComponentType() == ComponentType.CAR) {
@@ -54,10 +54,10 @@ public class EndpointTile extends NetworkTile {
 	 */
 	@ScheduledMethod(start= 1.0, interval= Constants.SPAWN_RATE)
 	public void spawn() {
-		this.position = NetworkBuilder.getCoordinatesOf(this);
+		this.position = Utils.getCoordinatesOf(this);
 		if (!isTileBlocked()) {
 			Car newCar = new Car(CarState.DRIVING, this.carDirection);
-			NetworkBuilder.addComponent(newCar, this.position);
+			Utils.addComponent(newCar, this.position);
 		}
 	}
 }

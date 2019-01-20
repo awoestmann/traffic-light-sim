@@ -23,6 +23,10 @@
       <string>streetnetwork.NetworkComponentStyle</string>
     </entry>
     <entry>
+      <string>streetnetwork.ThrougputMeasurePoint</string>
+      <string>repast.simphony.visualizationOGL2D.DefaultStyleOGL2D</string>
+    </entry>
+    <entry>
       <string>streetnetwork.Crossroad</string>
       <string>streetnetwork.NetworkComponentStyle</string>
     </entry>
@@ -63,7 +67,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-1300574970</hashCode>
+    <hashCode>-1632471680</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>streetnetwork_projection_id</layoutProjection>
@@ -71,27 +75,31 @@
   <layerOrder>
     <entry>
       <string>streetnetwork.Car</string>
-      <int>5</int>
+      <int>6</int>
     </entry>
     <entry>
       <string>streetnetwork.TrafficLight</string>
-      <int>4</int>
+      <int>5</int>
     </entry>
     <entry>
       <string>streetnetwork.EndpointTile</string>
-      <int>1</int>
+      <int>2</int>
     </entry>
     <entry>
       <string>streetnetwork.StreetTile</string>
-      <int>0</int>
+      <int>1</int>
     </entry>
     <entry>
       <string>streetnetwork.NetworkTile</string>
-      <int>3</int>
+      <int>4</int>
+    </entry>
+    <entry>
+      <string>streetnetwork.ThrougputMeasurePoint</string>
+      <int>0</int>
     </entry>
     <entry>
       <string>streetnetwork.Crossroad</string>
-      <int>2</int>
+      <int>3</int>
     </entry>
   </layerOrder>
   <projections>

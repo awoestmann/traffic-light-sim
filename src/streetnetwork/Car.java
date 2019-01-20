@@ -38,7 +38,7 @@ public class Car extends NetworkComponent{
 	 */
 	private Direction nextDirection;
 	
-	public CarState get_state()
+	public CarState getState()
 	{
 		return state;
 	}
@@ -74,7 +74,7 @@ public class Car extends NetworkComponent{
 	 * @return List of objects in front
 	 */
 	private Iterable<NetworkComponent> getObjectsInFront() {
-		NdPoint currentPos = NetworkBuilder.getCoordinatesOf(this);
+		NdPoint currentPos = Utils.getCoordinatesOf(this);
 		double x = currentPos.getX();
 		double y = currentPos.getY();
 		switch (this.direction) {
@@ -83,7 +83,7 @@ public class Car extends NetworkComponent{
 			case LEFT: x -= 1; break;
 			case RIGHT: x += 1; break;
 		}
-		return NetworkBuilder.getObjectsAt(x, y);
+		return Utils.getObjectsAt(x, y);
 	}
 	
 	/**
@@ -101,7 +101,7 @@ public class Car extends NetworkComponent{
 			case LEFT: x -= 1; break;
 			case RIGHT: x += 1; break;
 		}
-		return NetworkBuilder.getObjectsAt(x, y);
+		return Utils.getObjectsAt(x, y);
 	}
 	
 	/**
@@ -205,7 +205,7 @@ public class Car extends NetworkComponent{
 	 */
 	private boolean isTurningPossible() {
 		//Get coordinates after turn;
-		NdPoint pos = NetworkBuilder.getCoordinatesOf(this);
+		NdPoint pos = Utils.getCoordinatesOf(this);
 		pos = Utils.moveCoordinatesInDirection(pos, this.direction);
 		double x = pos.getX();
 		double y = pos.getY();		
@@ -229,7 +229,7 @@ public class Car extends NetworkComponent{
 	@ScheduledMethod(start= 1.0, interval= Constants.CAR_UPDATE_INTERVAL)
 	public void step(){
 		
-		NdPoint currentPos = NetworkBuilder.getCoordinatesOf(this);
+		NdPoint currentPos = Utils.getCoordinatesOf(this);
 		
 		Iterable<NetworkComponent> obj_in_front = getObjectsInFront();
 		boolean allowedToMove = true;
@@ -237,7 +237,7 @@ public class Car extends NetworkComponent{
 		for(NetworkComponent ac : obj_in_front) {		
 			switch (ac.getComponentType()) {
 				case CAR:
-					if(((Car) ac).get_state() == CarState.HALTING) {
+					if(((Car) ac).getState() == CarState.HALTING) {
 						allowedToMove = false;
 					}
 					break;
@@ -266,12 +266,12 @@ public class Car extends NetworkComponent{
 			}
 			NdPoint newPos = Utils.moveCoordinatesInDirection(currentPos, this.direction);
 			if (isNotOutOfBounds(newPos)) {
-				NetworkBuilder.moveComponentTo(this, newPos);
+				Utils.moveComponentTo(this, newPos);
 				if (crossroadToTurn != null) {
 					pickNextDirection(crossroadToTurn);
 				}
 			} else {
-				NetworkBuilder.removeComponent(this);
+				Utils.removeComponent(this);
 			}
 		} else {
 			set_state(CarState.HALTING);
