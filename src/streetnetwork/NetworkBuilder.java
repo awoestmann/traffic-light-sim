@@ -53,7 +53,7 @@ public class NetworkBuilder implements ContextBuilder<NetworkComponent>{
 		if (Constants.getDemoGrid()) {
 			this.factory.createDemoGrid();
 		} else {
-			
+			this.factory.createGrid();
 		}
 		
 		return context;

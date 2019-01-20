@@ -22,7 +22,7 @@ public class GridFactory {
 	 * Simulation space
 	 */
 	private ContinuousSpace<NetworkComponent> simSpace;
-
+	
 	/**
 	 * Creates a small demo grid
 	 */
@@ -67,22 +67,95 @@ public class GridFactory {
 		Utils.addComponent(t1, new NdPoint(25, 0));
 		
 		NetworkTile t2 = new EndpointTile(Direction.DOWN);
-		Utils.addComponent(t2, new NdPoint(25, 50));
+		Utils.addComponent(t2, new NdPoint(25, 49));
 		
 		NetworkTile t3 = new EndpointTile(Direction.LEFT);
-		Utils.addComponent(t3, new NdPoint(50, 25));
+		Utils.addComponent(t3, new NdPoint(49, 25));
 		
 		NetworkTile t4 = new EndpointTile(Direction.RIGHT);
-		Utils.addComponent(t4, new NdPoint(0, 25));
-		
-		
+		Utils.addComponent(t4, new NdPoint(0, 25));		
+	}
+	
+	/**
+	 * Creates an endpoint tile for the given coordinate
+	 * @param x x Coordinate
+	 * @param y y Coordinate
+	 * @return EntpointTile instance
+	 */
+	private EndpointTile getEndpointTile(double x, double y) {
+		if (x == 0) {
+			return new EndpointTile(Direction.RIGHT);
+		}
+		if (x == Constants.SPACE_WIDTH - 1) {
+			return new EndpointTile(Direction.LEFT);
+		}
+		if (y == 0) {
+			return new EndpointTile(Direction.UP);
+		}
+		if (y == Constants.SPACE_HEIGHT -1) {
+			return new EndpointTile(Direction.DOWN);
+		}		
+		return null;
+	}
+	
+	/**
+	 * Adds traffic lights to a given tile at given coordinates
+	 * @param tile Crossroad tile
+	 * @param coord Coordinates
+	 */
+	private void addTrafficLights(Crossroad tile, NdPoint coord) {
+		double x = coord.getX();
+		double y = coord.getY();
+		List<TrafficLight> horLights = ((Crossroad) tile).getHorizontalLights();
+		List<TrafficLight> verLights = ((Crossroad) tile).getVerticalLights();
+		for (TrafficLight t: horLights) {
+			if (t.getDirection() == Direction.LEFT) {
+				Utils.addComponent(t, x + 0.5, y + 0.5);
+			} else {
+				Utils.addComponent(t, x - 0.5, y - 0.5);
+			}
+		}
+		for (TrafficLight t: verLights) {
+			if (t.getDirection() == Direction.UP) {
+				Utils.addComponent(t, x + 0.5, x - 0.5);
+			} else {
+				Utils.addComponent(t, y - 0.5, y + 0.5);
+			}
+		}
 	}
 	
 	/**
 	 * Creates a grid of streets
 	 */
 	public void createGrid() {
-		
+
+		for (int x = 0; x < Constants.SPACE_WIDTH; x++) {
+			for (int y = 0; y < Constants.SPACE_HEIGHT; y++) {
+				boolean horStreet = y % Constants.HOR_STREET_DIST == 0 && y != 0;
+				boolean vertStreet = x % Constants.VER_STREET_DIST == 0 && x != 0;
+				boolean endpoint = x == 0 || x == Constants.SPACE_WIDTH - 1
+						|| y == 0 || y == Constants.SPACE_HEIGHT - 1;
+
+				NetworkTile tile = null;
+				if (horStreet && vertStreet) {
+					tile = new Crossroad(
+							new Direction[] {
+									Direction.UP, Direction.DOWN,
+									Direction.LEFT, Direction.RIGHT},
+							TrafficLightDirection.HORIZONTAL);
+					addTrafficLights((Crossroad) tile, new NdPoint(x, y));
+				} else if (horStreet ^ vertStreet) {
+					if (endpoint) {
+						tile = getEndpointTile(x, y);
+					}else {
+						tile = new StreetTile();
+					}
+				} else {
+					tile = new NetworkTile();
+				}
+				Utils.addComponent(tile, new NdPoint(x, y));
+			}
+		}
 	}
 	
 	/**

@@ -237,7 +237,9 @@ public class Car extends NetworkComponent{
 		for(NetworkComponent ac : obj_in_front) {		
 			switch (ac.getComponentType()) {
 				case CAR:
-					if(((Car) ac).getState() == CarState.HALTING) {
+					Car car = (Car) ac;
+					if(car.getState() == CarState.HALTING
+							&& car.getDirection() == this.getDirection()) {
 						allowedToMove = false;
 					}
 					break;

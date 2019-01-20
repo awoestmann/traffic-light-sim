@@ -52,7 +52,7 @@ public class EndpointTile extends NetworkTile {
 	/**
 	 * Spawns a new car
 	 */
-	@ScheduledMethod(start= 1.0, interval= Constants.SPAWN_RATE)
+	@ScheduledMethod(start= 5.0, interval= Constants.SPAWN_RATE)
 	public void spawn() {
 		this.position = Utils.getCoordinatesOf(this);
 		if (!isTileBlocked()) {

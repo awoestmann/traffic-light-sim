@@ -41,12 +41,12 @@ public final class Constants {
 	/**
 	 * Time in ticks after which all car positions will be updated
 	 */
-	public static final float CAR_UPDATE_INTERVAL = 100;
+	public static final float CAR_UPDATE_INTERVAL = 1;
 		
 	/**
 	 * Time in ticks after which a car will be spawned at an endpoint tile
 	 */
-	public static final int SPAWN_RATE = 500;
+	public static final int SPAWN_RATE = 5;
 	
 	/**
 	 * Time in ticks after which traffic light will switch
