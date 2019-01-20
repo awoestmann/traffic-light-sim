@@ -2,6 +2,11 @@ package streetnetwork;
 
 import streetnetwork.Constants.Direction;
 
+/**
+ * A class modeling a traffic light.
+ * Note that this class is just for the visual representation of the light.
+ * The actual functionality is in the crossroad class.
+ */
 public class TrafficLight extends NetworkComponent{
 	
 	private boolean open = false;

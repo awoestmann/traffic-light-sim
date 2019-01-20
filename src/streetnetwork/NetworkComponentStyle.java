@@ -22,7 +22,7 @@ public class NetworkComponentStyle extends DefaultStyleOGL2D {
 			case TILE: 
 				NetworkTile tile = (NetworkTile) agent;
 				return getTileColor(tile);
-			case CROSSING:
+			case CROSSROAD:
 				return Color.blue;
 			default: return Color.pink;
 		}
@@ -45,7 +45,7 @@ public class NetworkComponentStyle extends DefaultStyleOGL2D {
 			case STREET:
 				return Color.black;
 			case ENDPOINT:
-				return Color.white;
+				return Color.cyan;
 			case BLOCK:
 				return Color.gray;
 			default:

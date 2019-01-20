@@ -11,12 +11,20 @@
       <string>streetnetwork.NetworkComponentStyle</string>
     </entry>
     <entry>
+      <string>streetnetwork.EndpointTile</string>
+      <string>streetnetwork.NetworkComponentStyle</string>
+    </entry>
+    <entry>
+      <string>streetnetwork.StreetTile</string>
+      <string>streetnetwork.NetworkComponentStyle</string>
+    </entry>
+    <entry>
       <string>streetnetwork.NetworkTile</string>
       <string>streetnetwork.NetworkComponentStyle</string>
     </entry>
     <entry>
-      <string>streetnetwork.Crossing</string>
-      <string>repast.simphony.visualizationOGL2D.DefaultStyleOGL2D</string>
+      <string>streetnetwork.Crossroad</string>
+      <string>streetnetwork.NetworkComponentStyle</string>
     </entry>
   </styles>
   <editedStyles>
@@ -29,11 +37,19 @@
       <null/>
     </entry>
     <entry>
+      <string>streetnetwork.EndpointTile</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>streetnetwork.StreetTile</string>
+      <null/>
+    </entry>
+    <entry>
       <string>streetnetwork.NetworkTile</string>
       <null/>
     </entry>
     <entry>
-      <string>streetnetwork.Crossing</string>
+      <string>streetnetwork.Crossroad</string>
       <null/>
     </entry>
   </editedStyles>
@@ -47,7 +63,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-843618467</hashCode>
+    <hashCode>-1300574970</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>streetnetwork_projection_id</layoutProjection>
@@ -55,18 +71,26 @@
   <layerOrder>
     <entry>
       <string>streetnetwork.Car</string>
-      <int>3</int>
+      <int>5</int>
     </entry>
     <entry>
       <string>streetnetwork.TrafficLight</string>
+      <int>4</int>
+    </entry>
+    <entry>
+      <string>streetnetwork.EndpointTile</string>
       <int>1</int>
     </entry>
     <entry>
-      <string>streetnetwork.NetworkTile</string>
+      <string>streetnetwork.StreetTile</string>
       <int>0</int>
     </entry>
     <entry>
-      <string>streetnetwork.Crossing</string>
+      <string>streetnetwork.NetworkTile</string>
+      <int>3</int>
+    </entry>
+    <entry>
+      <string>streetnetwork.Crossroad</string>
       <int>2</int>
     </entry>
   </layerOrder>

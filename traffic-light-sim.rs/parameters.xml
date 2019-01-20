@@ -2,6 +2,6 @@
 <parameters>
 
 	<parameter name="randomSeed" displayName="Default Random Seed" type="int" defaultValue="__NULL__" />
-	<parameter name="SWITCH_TIME" displayName="Traffic Light Switch Time" defaultValue="2500" type="int"/>
-	<parameter name="MAX_SPEED" displayName="Maximum Speed" defaultValue="1" type="float" />		
+	<parameter name="SWITCH_TIME" displayName="Traffic Light Switch Time (ticks)" defaultValue="2500" type="int"/>
+	<parameter name="MAX_SPEED" displayName="Maximum Speed (tile per tick)" defaultValue="1" type="float" />	
 </parameters>

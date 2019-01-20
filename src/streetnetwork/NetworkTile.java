@@ -1,14 +1,19 @@
 package streetnetwork;
 
+/**
+ * A generic tile class, used as a block element
+ * @author awoestmann
+ *
+ */
 public class NetworkTile extends NetworkComponent{
 
-	public enum tile_type {STREET, ENDPOINT, BLOCK, CROSSING};
+	public enum tile_type {STREET, ENDPOINT, BLOCK, CROSSROAD};
 
-	private tile_type tile_type;	
-	public NetworkTile(tile_type o_type)
+	protected tile_type tile_type;	
+	public NetworkTile()
 	{
 		componentType = ComponentType.TILE;
-		this.tile_type = o_type;
+		this.tile_type = tile_type.BLOCK;
 	}
 
 	public tile_type getTileType() {

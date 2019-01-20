@@ -7,7 +7,8 @@ import streetnetwork.Constants.Direction;
 import streetnetwork.Constants.TrafficLightDirection;
 
 public class Car extends NetworkComponent{
-	public enum CarState {DRIVING, HALTING};
+
+	public enum CarState {DRIVING, HALTING, TURNING};
 	/**
 	 * Current state
 	 */
@@ -21,28 +22,34 @@ public class Car extends NetworkComponent{
 	/**
 	 * Direction
 	 */
-	Direction direction;
-	
-	private final float speed = Constants.getSpeed();
+	private Direction direction;
 	
 	/**
-	 * The space this agent is currently in
+	 * Next direction if encountering a crossroad
 	 */
-	private ContinuousSpace<NetworkComponent> space;
+	private Direction nextDirection;
 	
+	/**
+	 * Speed in tiles per update
+	 */
+	private final float speed = Constants.getSpeed();
 	
 	public CarState get_state()
 	{
 		return state;
 	}
 	
-	public Car(CarState o_state, ContinuousSpace<NetworkComponent> o_space, Direction direction)
+	public Direction getDirection() {
+		return this.direction;
+	}
+	
+	public Car(CarState o_state, Direction direction)
 	{
-		space = o_space;
-		state = o_state;
-		_state = o_state;
+		this.state = o_state;
+		this._state = o_state;
 		this.direction = direction;
-		componentType = NetworkComponent.ComponentType.CAR;
+		this.nextDirection = null;
+		this.componentType = NetworkComponent.ComponentType.CAR;
 	}
 
 	/**
@@ -58,17 +65,45 @@ public class Car extends NetworkComponent{
 		}
 	}
 	
+	/**
+	 * Returns a list of all objects in one tile distance in front of this car
+	 * @return List of objects in front
+	 */
 	private Iterable<NetworkComponent> getObjectsInFront() {
-		NdPoint currentPos = space.getLocation(this);
+		NdPoint currentPos = NetworkBuilder.getCoordinatesOf(this);
 		double x = currentPos.getX();
 		double y = currentPos.getY();
 		switch (this.direction) {
-		case UP: y+=1; break;
-		case DOWN: y -= 1; break;
-		case LEFT: x -= 1; break;
-		case RIGHT: x += 1; break;
+			case UP: y+=1; break;
+			case DOWN: y -= 1; break;
+			case LEFT: x -= 1; break;
+			case RIGHT: x += 1; break;
 		}
-		return space.getObjectsAt(x, y);
+		return NetworkBuilder.getObjectsAt(x, y);
+	}
+	
+	/**
+	 * Picks the next direction at a crossroad and prepares the car for a turn.
+	 * @param crossroad Crossroad to turn at
+	 */
+	private void pickNextDirection(Crossroad crossroad) {
+		this.nextDirection = Direction.LEFT;
+	}
+	
+	/**
+	 * Check if this car would be out of bounds with the given coordinates
+	 * @param x X Coordinate
+	 * @param y y Coordinate
+	 * @return True if out of bounds
+	 */
+	private boolean isOutOfBounds(double x, double y) {
+		switch (this.direction) {
+			case UP: return y < Constants.SPACE_HEIGHT - 1;
+			case DOWN: return y > 1;
+			case LEFT: return x > 1;
+			case RIGHT: return x < Constants.SPACE_WIDTH - 1;
+			default: return false;
+		}
 	}
 	
 	/**
@@ -77,7 +112,7 @@ public class Car extends NetworkComponent{
 	@ScheduledMethod(start= 1.0, interval= Constants.CAR_UPDATE_INTERVAL)
 	public void step(){
 		
-		NdPoint currentPos = space.getLocation(this);
+		NdPoint currentPos = NetworkBuilder.getCoordinatesOf(this);
 		double x = currentPos.getX();
 		double y = currentPos.getY();
 		double _x = x;
@@ -85,29 +120,31 @@ public class Car extends NetworkComponent{
 		
 		Iterable<NetworkComponent> obj_in_front = getObjectsInFront();
 		boolean allowedToMove = true;
-		for(NetworkComponent ac : obj_in_front)
-		{
-		
-			switch(ac.getComponentType())
-			{
-			case CAR:
-				if(((Car) ac).get_state() == CarState.HALTING) {
-					allowedToMove = false;
-				}
-				break;
-			case CROSSING:
-				Crossing crossing = (Crossing) ac;
-				if (!allowedToPass(crossing.getOpenDirection())) {
-					allowedToMove = false;
-				}
-				break;
-			case TRAFFIC_LIGHT:
-			case TILE:
-				break;
+		Crossroad crossroadToTurn = null;
+		for(NetworkComponent ac : obj_in_front) {		
+			switch (ac.getComponentType()) {
+				case CAR:
+					if(((Car) ac).get_state() == CarState.HALTING) {
+						allowedToMove = false;
+					}
+					break;
+				case CROSSROAD:
+					Crossroad crossroad = (Crossroad) ac;
+					if (!allowedToPass(crossroad.getOpenDirection())) {
+						allowedToMove = false;
+					} else {
+						crossroadToTurn = crossroad;
+					}
+					break;
+				default: break;
 			}
 		}
 		if (allowedToMove == true) {
 			set_state(CarState.DRIVING);
+			if (this.nextDirection != null) {
+				this.direction = this.nextDirection;
+				this.nextDirection = null;
+			}
 			switch (direction) {
 				case UP: 
 					_y += speed;
@@ -122,15 +159,17 @@ public class Car extends NetworkComponent{
 					_x += speed;
 					break;
 			}
-			if (_x < Constants.SPACE_WIDTH && _y < Constants.SPACE_HEIGHT) {
-				space.moveTo(this, _x, _y);
+			if (isOutOfBounds(_x, _y)) {
+				NetworkBuilder.moveComponentTo(this, _x, _y);
+				if (crossroadToTurn != null) {
+					pickNextDirection(crossroadToTurn);
+				}
 			} else {
 				NetworkBuilder.removeComponent(this);
 			}
 		} else {
 			set_state(CarState.HALTING);
-		}
-		
+		}		
 	}
 	
 	@ScheduledMethod(start = 1.5, interval = Constants.CAR_UPDATE_INTERVAL)

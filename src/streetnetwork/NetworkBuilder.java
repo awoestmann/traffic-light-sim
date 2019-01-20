@@ -5,6 +5,7 @@ import repast.simphony.context.Context;
 import repast.simphony.context.space.continuous.ContinuousSpaceFactoryFinder;
 import repast.simphony.dataLoader.ContextBuilder;
 import repast.simphony.space.continuous.ContinuousSpace;
+import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.continuous.SimpleCartesianAdder;
 import streetnetwork.Car.CarState;
 import streetnetwork.Constants.Direction;
@@ -25,12 +26,48 @@ public class NetworkBuilder implements ContextBuilder<NetworkComponent>{
 	 */
 	private static ContinuousSpace<NetworkComponent> simSpace;
 	
+	public static void moveComponentTo(NetworkComponent comp, double x, double y) {
+		simSpace.moveTo(comp, x, y);
+	}
+	
 	/**
 	 * Remove a component from the simulation.
 	 * @param comp Component to remove
 	 */
 	public static void removeComponent(NetworkComponent comp) {
 		simContext.remove(comp);
+	}
+	
+	/**
+	 * Returns an iterable of all objects at the given coordinates
+	 * @param position Position
+	 * @return Iterable of NetworkComponents
+	 */
+	public static Iterable<NetworkComponent> getObjectsAt(NdPoint position) {
+		return getObjectsAt(position.getX(), position.getY());
+	}
+	
+	/**
+	 * Returns a iterable of all objects at the given coordinates
+	 * @param x X Coordinate
+	 * @param y Y Coordinate
+	 * @return Iterable of NetworkComponents
+	 */
+	public static Iterable<NetworkComponent> getObjectsAt(double x, double y) {
+		return simSpace.getObjectsAt(x, y);
+	}
+	
+	/**
+	 * Add c component at a specific position to the simulation
+	 * @param component Component to add
+	 * @param position Position
+	 */
+	public static void addComponent(NetworkComponent component, NdPoint position) {
+		if (position != null) {
+			addComponent(component, position.getX(), position.getY());
+		} else {
+			throw new IllegalArgumentException("Invalid position");
+		}		
 	}
 	
 	/**
@@ -43,6 +80,13 @@ public class NetworkBuilder implements ContextBuilder<NetworkComponent>{
 		simContext.add(comp);
 		simSpace.moveTo(comp, x,y);
 	}
+	
+	public static NdPoint getCoordinatesOf(NetworkComponent component) {
+		if (component == null) {
+			return null;
+		}
+		return simSpace.getLocation(component);
+	}
 
 	/**
 	 * Build initial simulation
@@ -50,7 +94,7 @@ public class NetworkBuilder implements ContextBuilder<NetworkComponent>{
 	 */
 	public Context<NetworkComponent> build(Context<NetworkComponent> context) {
 		Constants.readParams();
-		ContinuousSpace<NetworkComponent> spaceBuilder = ContinuousSpaceFactoryFinder.createContinuousSpaceFactory(null)
+		simSpace = ContinuousSpaceFactoryFinder.createContinuousSpaceFactory(null)
 				.createContinuousSpace(
 						"streetnetwork_projection_id", context, new SimpleCartesianAdder<NetworkComponent>(),
 				new repast.simphony.space.continuous.StrictBorders(),
@@ -61,48 +105,42 @@ public class NetworkBuilder implements ContextBuilder<NetworkComponent>{
 			for (int j = 0; j < Constants.SPACE_HEIGHT; j++){
 				NetworkComponent tile;
 				if (i == 25 && j == 25) {
-					tile = new Crossing(new Direction[] {Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT},
+					tile = new Crossroad(new Direction[] {Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT},
 						TrafficLightDirection.HORIZONTAL);
 					context.add(tile);
-					List<TrafficLight> horLights = ((Crossing) tile).getHorizontalLights();
-					List<TrafficLight> verLights = ((Crossing) tile).getVerticalLights();
+					List<TrafficLight> horLights = ((Crossroad) tile).getHorizontalLights();
+					List<TrafficLight> verLights = ((Crossroad) tile).getVerticalLights();
 					for (TrafficLight t: horLights) {
 						context.add(t);
 						if (t.getDirection() == Direction.LEFT) {
-							spaceBuilder.moveTo(t, i + 0.5, j + 0.5);
+							simSpace.moveTo(t, i + 0.5, j + 0.5);
 						} else {
-							spaceBuilder.moveTo(t, i - 0.5, j - 0.5);
+							simSpace.moveTo(t, i - 0.5, j - 0.5);
 						}
 					}
 					for (TrafficLight t: verLights) {
 						context.add(t);
 						if (t.getDirection() == Direction.UP) {
-							spaceBuilder.moveTo(t, i + 0.5, j - 0.5);
+							simSpace.moveTo(t, i + 0.5, j - 0.5);
 						} else {
-							spaceBuilder.moveTo(t, j - 0.5, i + 0.5);
+							simSpace.moveTo(t, j - 0.5, i + 0.5);
 						}
 					}
 				} else if (i == 25 || j == 25) {
-					tile = new NetworkTile(tile_type.STREET);
+					tile = new StreetTile();
 					context.add(tile);
 				} else {
-					tile = new NetworkTile(tile_type.BLOCK);
+					tile = new NetworkTile();
 					context.add(tile);
 				}
-				spaceBuilder.moveTo(tile, i,j);
+				simSpace.moveTo(tile, i,j);
 				
 			}
 		}
-		NetworkTile t1 = new NetworkTile(tile_type.ENDPOINT);
+		NetworkTile t1 = new EndpointTile(Direction.UP);
 		context.add(t1);
-		spaceBuilder.moveTo(t1, 25,0);
+		simSpace.moveTo(t1, 25,0);
 		
-		Car c1 = new Car(CarState.DRIVING, spaceBuilder, Direction.UP); 
-		context.add(c1);
-		spaceBuilder.moveTo(c1, 25, 1);
-		Car c2 = new Car(CarState.HALTING, spaceBuilder, Direction.UP); 
-		context.add(c2);
-		spaceBuilder.moveTo(c2, 25, 5);
 		return context;
 	}
 }
