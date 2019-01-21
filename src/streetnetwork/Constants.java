@@ -2,6 +2,7 @@ package streetnetwork;
 
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.parameter.Parameters;
+import repast.simphony.space.continuous.NdPoint;
 
 /**
  * Class handling constants and params.
@@ -31,12 +32,22 @@ public final class Constants {
 	/**
 	 * Distance between two horizontal streets
 	 */
-	public final static int HOR_STREET_DIST = 15;
+	public final static int HOR_STREET_DIST = 25;
 	
 	/**
 	 * Distance between two vertical streets
 	 */
 	public static final int VER_STREET_DIST = 50;
+	
+	/**
+	 * Coordinates of the vertical measure point
+	 */
+	public static final NdPoint VER_MEASURE_POINT = new NdPoint(100, 135);
+	
+	/**
+	 * Coordinates of the horizontal measure point
+	 */
+	public static final NdPoint HOR_MEASURE_POINT = new NdPoint(112, 100);
 
 	/**
 	 * Time in ticks after which all car positions will be updated

@@ -9,9 +9,21 @@ import streetnetwork.Constants.Direction;
  */
 public class TrafficLight extends NetworkComponent{
 	
+	/**
+	 * True if traffic light is currently green
+	 */
 	private boolean open = false;
+	
+	/**
+	 * Direction cars can pass this light
+	 */
 	public Direction direction; 
 	
+	/**
+	 * Constructor
+	 * @param open True if light is green
+	 * @param direction Direction cars can pass
+	 */
 	public TrafficLight(boolean open, Direction direction) {
 		this.open = open;
 		this.direction = direction;

@@ -23,8 +23,8 @@
       <string>streetnetwork.NetworkComponentStyle</string>
     </entry>
     <entry>
-      <string>streetnetwork.ThrougputMeasurePoint</string>
-      <string>repast.simphony.visualizationOGL2D.DefaultStyleOGL2D</string>
+      <string>streetnetwork.ThroughputMeasurePoint</string>
+      <string>streetnetwork.NetworkComponentStyle</string>
     </entry>
     <entry>
       <string>streetnetwork.Crossroad</string>
@@ -53,6 +53,10 @@
       <null/>
     </entry>
     <entry>
+      <string>streetnetwork.ThroughputMeasurePoint</string>
+      <null/>
+    </entry>
+    <entry>
       <string>streetnetwork.Crossroad</string>
       <null/>
     </entry>
@@ -67,7 +71,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-1632471680</hashCode>
+    <hashCode>294477834</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>streetnetwork_projection_id</layoutProjection>
@@ -83,23 +87,23 @@
     </entry>
     <entry>
       <string>streetnetwork.EndpointTile</string>
-      <int>2</int>
+      <int>3</int>
     </entry>
     <entry>
       <string>streetnetwork.StreetTile</string>
-      <int>1</int>
+      <int>2</int>
     </entry>
     <entry>
       <string>streetnetwork.NetworkTile</string>
-      <int>4</int>
-    </entry>
-    <entry>
-      <string>streetnetwork.ThrougputMeasurePoint</string>
       <int>0</int>
     </entry>
     <entry>
+      <string>streetnetwork.ThroughputMeasurePoint</string>
+      <int>1</int>
+    </entry>
+    <entry>
       <string>streetnetwork.Crossroad</string>
-      <int>3</int>
+      <int>4</int>
     </entry>
   </layerOrder>
   <projections>

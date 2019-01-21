@@ -7,14 +7,15 @@ import streetnetwork.NetworkComponent.ComponentType;
 /**
  * Class used for measuring the car througput at the given coordinates. 
  */
-public class ThrougputMeasurePoint {
+public class ThroughputMeasurePoint extends NetworkComponent{
 	
 	private NdPoint coordinates;
 	private String name;
 	private long carsCounted;
 	private long intervalsCounted;
 
-	public ThrougputMeasurePoint(NdPoint coordinates, String name) {
+	public ThroughputMeasurePoint(NdPoint coordinates, String name) {
+		this.componentType = ComponentType.MEASURE_POINT;
 		this.coordinates = coordinates;
 		this.name = name;
 		this.carsCounted = 0;
@@ -23,6 +24,14 @@ public class ThrougputMeasurePoint {
 	
 	public NdPoint getCoordinates() {
 		return this.coordinates;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public float getThroughput() {
+		return (float) carsCounted/ (float) intervalsCounted;
 	}
 	
 	public void printResults() {

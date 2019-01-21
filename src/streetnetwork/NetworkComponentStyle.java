@@ -24,6 +24,8 @@ public class NetworkComponentStyle extends DefaultStyleOGL2D {
 				return getTileColor(tile);
 			case CROSSROAD:
 				return Color.blue;
+			case MEASURE_POINT:
+				return Color.cyan;
 			default: return Color.pink;
 		}
 	}
@@ -66,6 +68,9 @@ public class NetworkComponentStyle extends DefaultStyleOGL2D {
 			switch (type) {
 			case TRAFFIC_LIGHT:
 				spatial = shapeFactory.createCircle(15.0f, 8, true);
+				break;
+			case MEASURE_POINT:
+				spatial = shapeFactory.createCircle(20.0f, 8, true);
 				break;
 			case CAR:
 			default:

@@ -156,6 +156,7 @@ public class GridFactory {
 				Utils.addComponent(tile, new NdPoint(x, y));
 			}
 		}
+		addCenterThroughputMeasurePoint("Vertical point");
 	}
 	
 	/**
@@ -210,6 +211,17 @@ public class GridFactory {
 				Utils.addComponent(tile, new NdPoint(x, y));
 			}
 		}
+		addCenterThroughputMeasurePoint("Green wave");
+	}
+	
+	/**
+	 * Adds a measure point at a predefined central point.
+	 * @param name Name of the point
+	 */
+	public void addCenterThroughputMeasurePoint(String name) {
+		NdPoint vertCoord = Constants.VER_MEASURE_POINT;
+		ThroughputMeasurePoint vertPoint = new ThroughputMeasurePoint(vertCoord, name);
+		Utils.addComponent(vertPoint, vertCoord);		
 	}
 	
 	/**
