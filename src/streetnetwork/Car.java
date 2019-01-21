@@ -273,6 +273,7 @@ public class Car extends NetworkComponent{
 					pickNextDirection(crossroadToTurn);
 				}
 			} else {
+				TrafficMeasurement.removeCar(this);
 				Utils.removeComponent(this);
 			}
 		} else {

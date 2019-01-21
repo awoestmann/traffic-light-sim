@@ -65,7 +65,7 @@ public class NetworkComponentStyle extends DefaultStyleOGL2D {
 		if (spatial == null) {
 			switch (type) {
 			case TRAFFIC_LIGHT:
-				spatial = shapeFactory.createCircle(7.5f, 8, true);
+				spatial = shapeFactory.createCircle(15.0f, 8, true);
 				break;
 			case CAR:
 			default:

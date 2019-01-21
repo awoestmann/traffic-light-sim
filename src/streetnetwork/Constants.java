@@ -31,7 +31,7 @@ public final class Constants {
 	/**
 	 * Distance between two horizontal streets
 	 */
-	public final static int HOR_STREET_DIST = 50;
+	public final static int HOR_STREET_DIST = 15;
 	
 	/**
 	 * Distance between two vertical streets

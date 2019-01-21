@@ -57,6 +57,7 @@ public class EndpointTile extends NetworkTile {
 		this.position = Utils.getCoordinatesOf(this);
 		if (!isTileBlocked()) {
 			Car newCar = new Car(CarState.DRIVING, this.carDirection);
+			TrafficMeasurement.countCar(newCar);
 			Utils.addComponent(newCar, this.position);
 		}
 	}

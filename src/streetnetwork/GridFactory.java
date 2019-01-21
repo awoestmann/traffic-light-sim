@@ -110,16 +110,16 @@ public class GridFactory {
 		List<TrafficLight> verLights = ((Crossroad) tile).getVerticalLights();
 		for (TrafficLight t: horLights) {
 			if (t.getDirection() == Direction.LEFT) {
-				Utils.addComponent(t, x + 0.5, y + 0.5);
+				Utils.addComponent(t, x + 2.5, y + 2.5);
 			} else {
-				Utils.addComponent(t, x - 0.5, y - 0.5);
+				Utils.addComponent(t, x - 2.5, y - 2.5);
 			}
 		}
 		for (TrafficLight t: verLights) {
 			if (t.getDirection() == Direction.UP) {
-				Utils.addComponent(t, x + 0.5, x - 0.5);
+				Utils.addComponent(t, x + 2.5, x - 2.5);
 			} else {
-				Utils.addComponent(t, y - 0.5, y + 0.5);
+				Utils.addComponent(t, y - 2.5, y + 2.5);
 			}
 		}
 	}
