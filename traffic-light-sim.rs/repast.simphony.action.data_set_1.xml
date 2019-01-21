@@ -19,8 +19,8 @@
       <string>DrivingCars</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>DrivingCars</id>
-        <className>streetnetwork.TrafficMeasurement</className>
-        <methodName>getDrivingCars</methodName>
+        <className>streetnetwork.Car</className>
+        <methodName>isDriving</methodName>
         <aggType>SUM</aggType>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
@@ -28,8 +28,8 @@
       <string>HaltingCars</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>HaltingCars</id>
-        <className>streetnetwork.TrafficMeasurement</className>
-        <methodName>getHaltingCars</methodName>
+        <className>streetnetwork.Car</className>
+        <methodName>isHalting</methodName>
         <aggType>SUM</aggType>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>

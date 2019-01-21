@@ -1,5 +1,6 @@
 package streetnetwork;
 
+import java.util.HashMap;
 import java.util.List;
 
 import repast.simphony.context.Context;
@@ -117,9 +118,9 @@ public class GridFactory {
 		}
 		for (TrafficLight t: verLights) {
 			if (t.getDirection() == Direction.UP) {
-				Utils.addComponent(t, x + 2.5, x - 2.5);
+				Utils.addComponent(t, x + 2.5, y - 2.5);
 			} else {
-				Utils.addComponent(t, y - 2.5, y + 2.5);
+				Utils.addComponent(t, x - 2.5, y + 2.5);
 			}
 		}
 	}
@@ -128,7 +129,6 @@ public class GridFactory {
 	 * Creates a grid of streets
 	 */
 	public void createGrid() {
-
 		for (int x = 0; x < Constants.SPACE_WIDTH; x++) {
 			for (int y = 0; y < Constants.SPACE_HEIGHT; y++) {
 				boolean horStreet = y % Constants.HOR_STREET_DIST == 0 && y != 0;
@@ -144,6 +144,60 @@ public class GridFactory {
 									Direction.LEFT, Direction.RIGHT},
 							TrafficLightDirection.HORIZONTAL);
 					addTrafficLights((Crossroad) tile, new NdPoint(x, y));
+				} else if (horStreet ^ vertStreet) {
+					if (endpoint) {
+						tile = getEndpointTile(x, y);
+					}else {
+						tile = new StreetTile();
+					}
+				} else {
+					tile = new NetworkTile();
+				}
+				Utils.addComponent(tile, new NdPoint(x, y));
+			}
+		}
+	}
+	
+	/**
+	 * Creates a grid including a "green wave" for all streets following the
+	 * given direction.
+	 * @param dir Direction to set the green wave up
+	 */
+	public void createGreenWaveGrid(TrafficLightDirection dir) {
+		//Create a map to count the already set up lights for each wave
+		HashMap<Integer, Integer> waves = new HashMap<Integer, Integer>();
+		for (int x = 0; x < Constants.SPACE_WIDTH; x++) {
+			for (int y = 0; y < Constants.SPACE_HEIGHT; y++) {
+				boolean horStreet = y % Constants.HOR_STREET_DIST == 0 && y != 0;
+				boolean vertStreet = x % Constants.VER_STREET_DIST == 0 && x != 0;
+				boolean endpoint = x == 0 || x == Constants.SPACE_WIDTH - 1
+						|| y == 0 || y == Constants.SPACE_HEIGHT - 1;
+
+				NetworkTile tile = null;
+				if (horStreet && vertStreet) {
+					tile = new Crossroad(
+							new Direction[] {
+									Direction.UP, Direction.DOWN,
+									Direction.LEFT, Direction.RIGHT},
+							TrafficLightDirection.HORIZONTAL);
+					int delay = 0;
+					int key = -1;
+					if (dir == TrafficLightDirection.HORIZONTAL && horStreet) {
+						delay = Constants.VER_STREET_DIST;
+						key = y;
+					}					
+					if (dir == TrafficLightDirection.VERTICAL && vertStreet) {
+						delay = Constants.HOR_STREET_DIST;
+						key = x;
+					}
+					Integer count = waves.get(key);
+					if (count == null) {
+						count = 0;
+						waves.put(key, 0);
+					}
+					((Crossroad) tile).setDelay(count * delay);
+					addTrafficLights((Crossroad) tile, new NdPoint(x, y));
+					waves.computeIfPresent(key, (k, v) -> v + 1);
 				} else if (horStreet ^ vertStreet) {
 					if (endpoint) {
 						tile = getEndpointTile(x, y);

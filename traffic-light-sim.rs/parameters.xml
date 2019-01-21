@@ -4,5 +4,6 @@
 	<parameter name="randomSeed" displayName="Default Random Seed" type="int" defaultValue="__NULL__" />
 	<parameter name="SWITCH_TIME" displayName="Traffic Light Switch Time (ticks)" defaultValue="50" type="int"/>
 	<parameter name="MAX_SPEED" displayName="Maximum Speed (tile per tick)" defaultValue="1" type="float" />
-	<parameter name="DEMO_GRID" displayName="Use demo grid?" defaultValue="false" type="boolean"/>	
+	<parameter name="DEMO_GRID" displayName="Use demo grid?" defaultValue="false" type="boolean"/>
+	<parameter name="GREEN_WAVE" displayName="Set up a green wave?" defaultValue="true" type="boolean"/>	
 </parameters>

@@ -55,6 +55,14 @@ public class Car extends NetworkComponent{
 		this.nextDirection = null;
 		this.componentType = NetworkComponent.ComponentType.CAR;
 	}
+	
+	public boolean isDriving() {
+		return this.state == CarState.DRIVING;
+	}
+	
+	public boolean isHalting() {
+		return this.state == CarState.HALTING;
+	}
 
 	/**
 	 * Checks if car is allowed to pass a crossing with open direction dir.

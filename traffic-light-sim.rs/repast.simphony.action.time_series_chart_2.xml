@@ -1,5 +1,5 @@
 <repast.simphony.chart2.engine.TimeSeriesChartDescriptor simphonyVersion="2.5.0">
-  <name>Time Series Chart</name>
+  <name>Car Count Chart</name>
   <dataSet>CarCount</dataSet>
   <xAxisLabel>Tick Count</xAxisLabel>
   <yAxisLabel>Cars</yAxisLabel>

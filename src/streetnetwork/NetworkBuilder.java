@@ -53,9 +53,12 @@ public class NetworkBuilder implements ContextBuilder<NetworkComponent>{
 		if (Constants.getDemoGrid()) {
 			this.factory.createDemoGrid();
 		} else {
-			this.factory.createGrid();
-		}
-		
+			if (Constants.getGreenWave()) {
+				this.factory.createGreenWaveGrid(TrafficLightDirection.VERTICAL);
+			} else {
+				this.factory.createGrid();
+			}
+		}		
 		return context;
 	}
 }

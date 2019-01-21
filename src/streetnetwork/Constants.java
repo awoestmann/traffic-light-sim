@@ -59,6 +59,11 @@ public final class Constants {
 	private static boolean DEMO_GRID = false;
 	
 	/**
+	 * True if green wave shall be used
+	 */
+	private static boolean GREEN_WAVE = true;
+
+	/**
 	 * True if simulation params have been read
 	 */
 	private static boolean initialized = false;
@@ -73,6 +78,7 @@ public final class Constants {
 			
 			SWITCH_TIME = (int)p.getValue("SWITCH_TIME");
 			DEMO_GRID = (boolean) p.getValue("DEMO_GRID");
+			GREEN_WAVE = (boolean) p.getValue("GREEN_WAVE");
 		}		
 	}
 	
@@ -82,7 +88,13 @@ public final class Constants {
 	}
 	
 	public static boolean getDemoGrid() {
+		readParams();
 		return DEMO_GRID;
+	}
+	
+	public static boolean getGreenWave() {
+		readParams();
+		return GREEN_WAVE;
 	}
 	
 	private Constants() {}

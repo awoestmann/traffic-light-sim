@@ -51,7 +51,8 @@ public class Crossroad extends NetworkTile {
 	 * @param direction
 	 * @param turningProbabilities The probability to turn in each possible direction
 	 */
-	public Crossroad(Direction[] possibleDirections, TrafficLightDirection direction, float[] turningProbabilities) {
+	public Crossroad(Direction[] possibleDirections, TrafficLightDirection direction,
+			float[] turningProbabilities) {
 		super();
 		this.componentType = ComponentType.CROSSROAD;
 		this.possibleDirections = possibleDirections;
@@ -69,6 +70,14 @@ public class Crossroad extends NetworkTile {
 				this.horizontalLights.add(new TrafficLight(isTrafficLightOpen(d), d));
 			}
 		}
+	}
+	
+	/**
+	 * Adds a one time delay to the switching time of this crossroad.
+	 * @param delay Delay to add
+	 */
+	public void setDelay(int delay) {
+		this.ticksSinceLastSwitch -= delay;
 	}
 	
 	/**
